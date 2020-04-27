@@ -5,7 +5,7 @@ RSpec.describe Coin do
 
   describe '#valid_coins' do
     it 'returns valid coins' do
-      expect(Coin.valid_coins).to eq valid_coins
+      expect(Coin.valid_coins.sort).to eq valid_coins.sort
     end
   end
 
