@@ -26,7 +26,9 @@ class CLI
     output_cursor
 
     user_input = ''
-    while user_input != EXIT_OPTION
+    command = ''
+
+    while command != EXIT_OPTION
       user_input = gets.chomp
 
       args = user_input.split(' ')
@@ -49,7 +51,7 @@ class CLI
         output_invalid_input
       end
 
-      output_cursor unless user_input == EXIT_OPTION
+      output_cursor unless command == EXIT_OPTION
     end
   end
 
