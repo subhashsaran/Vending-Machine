@@ -7,16 +7,12 @@ RSpec.describe Product do
   describe '.price' do
     subject { product.price }
 
-    it 'returns the product price' do
-      expect(subject).to eq price
-    end
+    it { should be price }
   end
 
   describe '.name' do
     subject { product.name }
 
-    it 'returns the product name' do
-      expect(subject).to eq name
-    end
+    it { should be name }
   end
 end
