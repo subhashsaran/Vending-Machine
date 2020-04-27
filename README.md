@@ -2,7 +2,22 @@
 
 ## How to Use
 
-*Todo*
+Running `ruby main.rb` will boot up the vending machine CLI in your terminal window where you will be presented with this interface:
+
+```
+Welcome to Vending Machine
+
+Available Options
+=================
+balance: Output Balance
+insert:  Insert Coin
+help:    Display these options
+clear:   Clear history
+exit:    Close CLI
+>
+```
+
+From here you can enter any of the given inputs to perform an action.
 
 ## How to Test
 
