@@ -47,6 +47,7 @@ The bulk of our score comes from how you completed these functional and non-func
 
 - View Products
 - Insert Coin
+- View Balance
 - Purchase Product
 - Reload Products
 - Reload Change
