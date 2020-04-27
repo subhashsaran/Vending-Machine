@@ -111,7 +111,7 @@ class VendingMachine
   end
 
   def remove_product_from_stock(product:)
-    @products.delete_at(@products.index(product))
+    products.delete_at(products.index(product))
   end
 
   def deposit_current_balance_in_change
@@ -123,7 +123,7 @@ class VendingMachine
 
   def remove_change(removed_change:)
     removed_change.each do |coin|
-      @change.delete_at(@change.index(coin))
+      change.delete_at(change.index(coin))
     end
   end
 end
