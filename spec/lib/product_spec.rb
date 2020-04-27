@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 RSpec.describe Product do
   let(:product) { Product.new(name: name, price: price) }
 
   let(:price) { rand(1..100) }
-  let(:name) { ['Pepsi', 'Coke', 'Banana'].sample }
+  let(:name) { %w[Pepsi Coke Banana].sample }
 
   describe '.price' do
     subject { product.price }

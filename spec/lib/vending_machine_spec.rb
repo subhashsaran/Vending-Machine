@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe VendingMachine do
   let(:vending_machine) { VendingMachine.new(products: initial_products, change: initial_change) }
 
@@ -7,12 +9,12 @@ RSpec.describe VendingMachine do
   describe '.products' do
     subject { vending_machine.products }
 
-    let(:initial_products) {
+    let(:initial_products) do
       [
         Product.new(name: 'Pepsi', price: 65),
         Product.new(name: 'Banana', price: 50)
       ]
-    }
+    end
 
     it { should be initial_products }
   end

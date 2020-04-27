@@ -11,8 +11,8 @@ group :test do
 end
 
 group :development do
-  gem 'rubocop', '~> 0.82.0'
   gem 'reek', '~> 6.0'
+  gem 'rubocop', '~> 0.82.0'
 end
 
 group :test, :development do

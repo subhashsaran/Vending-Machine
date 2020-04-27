@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VendingMachine
   def initialize(products: [], change: [])
     @products = products

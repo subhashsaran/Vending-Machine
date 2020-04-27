@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class Coin
-  VALID_COINS = [1, 2, 5, 10, 20, 50, 100, 200]
+  VALID_COINS = [1, 2, 5, 10, 20, 50, 100, 200].freeze
 
   class << self
     def valid_coins
