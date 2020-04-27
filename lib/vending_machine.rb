@@ -15,8 +15,8 @@
 #
 class VendingMachine
   def initialize(products: [], change: [])
-    @products = products.compact
-    @change = change.compact.select(&:valid?)
+    reset_products(new_products: products)
+    reset_change(new_change: change)
 
     @inserted_coins = []
   end
@@ -24,7 +24,7 @@ class VendingMachine
   attr_reader :products, :change
 
   def reset_products(new_products:)
-    @products = new_products
+    @products = new_products.compact
   end
 
   def reset_change(new_change:)
