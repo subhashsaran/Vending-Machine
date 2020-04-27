@@ -27,7 +27,7 @@ RSpec.describe CLI do
     "=============\n" \
     "Pepsi x 2 @ £0.50\n" \
     "Coke x 3 @ £0.60\n" \
-    "Banana x 4 @ £0.30\n" \
+    "Banana x 4 @ £0.30\n"
   end
 
   let(:initial_change_output) do
@@ -46,13 +46,14 @@ RSpec.describe CLI do
   let(:options_output) do
     "Available Options\n" \
     "=================\n" \
-    "balance:    Output Balance\n" \
-    "insert <x>: Insert Coin (options: £2, £1, 50p, 20p, 10p, 5p, 2p, 1p)\n" \
-    "stock:      Display current stock\n" \
-    "change:     Display current change in machine\n" \
-    "help:       Display these options\n" \
-    "clear:      Clear history\n" \
-    'exit:       Close CLI' \
+    "balance:      Output Balance\n" \
+    "insert <x>:   Insert Coin (options: £2, £1, 50p, 20p, 10p, 5p, 2p, 1p)\n" \
+    "stock:        Display current stock\n" \
+    "change:       Display current change in machine\n" \
+    "purchase <x>: Attempt to purchase a product (case sensitive)\n" \
+    "help:         Display these options\n" \
+    "clear:        Clear history\n" \
+    'exit:         Close CLI'
   end
 
   shared_examples_for 'correct output' do
@@ -155,6 +156,20 @@ RSpec.describe CLI do
 
       include_examples 'correct output'
     end
+
+    context 'when stock empty' do
+      before do
+        allow_any_instance_of(ConfigLoader).to receive(:initial_products).and_return([])
+      end
+
+      let(:initial_stock_output) do
+        "Current Stock\n" \
+        "=============\n" \
+        "No products in stock\n"
+      end
+
+      include_examples 'correct output'
+    end
   end
 
   describe 'change' do
@@ -169,6 +184,20 @@ RSpec.describe CLI do
 
     context 'with an option' do
       let(:user_input) { ['change foo', 'exit'] }
+
+      include_examples 'correct output'
+    end
+
+    context 'when change empty' do
+      before do
+        allow_any_instance_of(ConfigLoader).to receive(:initial_change).and_return([])
+      end
+
+      let(:initial_change_output) do
+        "Current Change\n" \
+        "==============\n" \
+        "No change available\n"
+      end
 
       include_examples 'correct output'
     end
@@ -205,6 +234,191 @@ RSpec.describe CLI do
 
       let(:expected_output) do
         "#{introduction}ERROR: Invalid argument \n" \
+        '> '
+      end
+
+      include_examples 'correct output'
+    end
+  end
+
+  describe 'purchase' do
+    context 'for a product not in stock' do
+      let(:user_input) do
+        [
+          'insert £1',
+          'purchase Lettuce',
+          'balance',
+          'stock',
+          'change',
+          'exit'
+        ]
+      end
+
+      let(:expected_output) do
+        "#{introduction}Coin Inserted\n" \
+        "Current Balance: £1.00\n" \
+        "> ERROR: out_of_stock\n" \
+        "> Current Balance: £1.00\n" \
+        "> #{initial_stock_output}" \
+        "> #{initial_change_output}" \
+        '> '
+      end
+
+      include_examples 'correct output'
+    end
+
+    context 'without enough balance' do
+      let(:user_input) do
+        [
+          'insert 10p',
+          'purchase Banana',
+          'balance',
+          'stock',
+          'change',
+          'exit'
+        ]
+      end
+
+      let(:expected_output) do
+        "#{introduction}Coin Inserted\n" \
+        "Current Balance: £0.10\n" \
+        "> ERROR: insufficient_balance\n" \
+        "> Current Balance: £0.10\n" \
+        "> #{initial_stock_output}" \
+        "> #{initial_change_output}" \
+        '> '
+      end
+
+      include_examples 'correct output'
+    end
+
+    context 'without enough change in the machine' do
+      before do
+        allow_any_instance_of(ConfigLoader).to receive(:initial_change).and_return([])
+      end
+
+      let(:user_input) do
+        [
+          'insert £1',
+          'purchase Banana',
+          'balance',
+          'stock',
+          'change',
+          'exit'
+        ]
+      end
+
+      let(:initial_change_output) do
+        "Current Change\n" \
+        "==============\n" \
+        "No change available\n"
+      end
+
+      let(:expected_output) do
+        "#{introduction}Coin Inserted\n" \
+        "Current Balance: £1.00\n" \
+        "> ERROR: insufficient_change\n" \
+        "> Current Balance: £1.00\n" \
+        "> #{initial_stock_output}" \
+        "> #{initial_change_output}" \
+        '> '
+      end
+
+      include_examples 'correct output'
+    end
+
+    context 'with exact change' do
+      let(:user_input) do
+        [
+          'insert 20p',
+          'insert 10p',
+          'purchase Banana',
+          'balance',
+          'stock',
+          'change',
+          'exit'
+        ]
+      end
+
+      let(:new_stock) do
+        "Current Stock\n" \
+        "=============\n" \
+        "Pepsi x 2 @ £0.50\n" \
+        "Coke x 3 @ £0.60\n" \
+        "Banana x 3 @ £0.30\n"
+      end
+
+      let(:new_change) do
+        "Current Change\n" \
+        "==============\n" \
+        "£2 x 5\n" \
+        "£1 x 5\n" \
+        "50p x 5\n" \
+        "20p x 6\n" \
+        "10p x 6\n" \
+        "5p x 5\n" \
+        "2p x 5\n" \
+        "1p x 5\n"
+      end
+
+      let(:expected_output) do
+        "#{introduction}Coin Inserted\n" \
+        "Current Balance: £0.20\n" \
+        "> Coin Inserted\n" \
+        "Current Balance: £0.30\n" \
+        "> Banana vended\n" \
+        "No change is dispensed\n" \
+        "> Current Balance: £0.00\n" \
+        "> #{new_stock}" \
+        "> #{new_change}" \
+        '> '
+      end
+
+      include_examples 'correct output'
+    end
+
+    context 'with excess money' do
+      let(:user_input) do
+        [
+          'insert £1',
+          'purchase Banana',
+          'balance',
+          'stock',
+          'change',
+          'exit'
+        ]
+      end
+
+      let(:new_stock) do
+        "Current Stock\n" \
+        "=============\n" \
+        "Pepsi x 2 @ £0.50\n" \
+        "Coke x 3 @ £0.60\n" \
+        "Banana x 3 @ £0.30\n"
+      end
+
+      let(:new_change) do
+        "Current Change\n" \
+        "==============\n" \
+        "£2 x 5\n" \
+        "£1 x 6\n" \
+        "50p x 4\n" \
+        "20p x 4\n" \
+        "10p x 5\n" \
+        "5p x 5\n" \
+        "2p x 5\n" \
+        "1p x 5\n"
+      end
+
+      let(:expected_output) do
+        "#{introduction}Coin Inserted\n" \
+        "Current Balance: £1.00\n" \
+        "> Banana vended\n" \
+        "£0.70 is dispensed\n" \
+        "It consists of: 50p, 20p\n" \
+        "> Current Balance: £0.00\n" \
+        "> #{new_stock}" \
+        "> #{new_change}" \
         '> '
       end
 

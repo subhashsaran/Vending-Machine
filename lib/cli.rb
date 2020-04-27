@@ -18,6 +18,7 @@ class CLI
 
   BALANCE_OPTION     = 'balance'
   INSERT_COIN_OPTION = 'insert'
+  PURCHASE_OPTION    = 'purchase'
   STOCK_OPTION       = 'stock'
   CHANGE_OPTION      = 'change'
   HELP_OPTION        = 'help'
@@ -49,6 +50,8 @@ class CLI
         output_stock
       when CHANGE_OPTION
         output_change
+      when PURCHASE_OPTION
+        purchase_product(input: option)
       when HELP_OPTION
         output_options
       when CLEAR_OPTION
@@ -111,6 +114,7 @@ class CLI
       "#{INSERT_COIN_OPTION} <x>" => "Insert Coin (options: #{insert_coin_custom_input_examples})",
       STOCK_OPTION => 'Display current stock',
       CHANGE_OPTION => 'Display current change in machine',
+      "#{PURCHASE_OPTION} <x>" => 'Attempt to purchase a product (case sensitive)',
       HELP_OPTION => 'Display these options',
       CLEAR_OPTION => 'Clear history',
       EXIT_OPTION => 'Close CLI'
@@ -152,29 +156,40 @@ class CLI
   end
 
   def output_stock
-    products = vending_machine.products
-
-    product_info = products.group_by do |product|
-      { name: product.name, price: product.price }
-    end.transform_values(&:length)
-
     puts 'Current Stock'
     puts '============='
-    product_info.each do |product_info, quantity|
-      name = product_info[:name]
-      price = format_currency(product_info[:price])
-      puts "#{name} x #{quantity} @ #{price}"
+
+    products = vending_machine.products
+
+    if products.any?
+      product_info = products.group_by do |product|
+        { name: product.name, price: product.price }
+      end.transform_values(&:length)
+
+      product_info.each do |product_info, quantity|
+        name = product_info[:name]
+        price = format_currency(product_info[:price])
+        puts "#{name} x #{quantity} @ #{price}"
+      end
+    else
+      puts 'No products in stock'
     end
   end
 
   def output_change
-    change = vending_machine.change
-    coin_counts = change.group_by(&:name).transform_values(&:count)
-
     puts 'Current Change'
     puts '=============='
-    coin_counts.each do |coin_name, quantity|
-      puts "#{coin_name} x #{quantity}"
+
+    change = vending_machine.change
+
+    if change.any?
+      coin_counts = change.group_by(&:name).transform_values(&:count)
+
+      coin_counts.each do |coin_name, quantity|
+        puts "#{coin_name} x #{quantity}"
+      end
+    else
+      puts 'No change available'
     end
   end
 
@@ -190,6 +205,21 @@ class CLI
       output_balance
     else
       output_error(error: "Invalid argument #{input}")
+    end
+  end
+
+  def purchase_product(input:)
+    response = vending_machine.request_product(product_name: input)
+
+    return output_error(error: response.error) if response.error?
+
+    puts "#{response.vended_product_name} vended"
+
+    if response.change?
+      puts "#{response.total_change} is dispensed"
+      puts "It consists of: #{response.change_coin_names.join(', ')}"
+    else
+      puts 'No change is dispensed'
     end
   end
 end
