@@ -10,6 +10,14 @@ class VendingMachine
 
   attr_reader :products, :change
 
+  def reset_products(new_products:)
+    @products = new_products
+  end
+
+  def reset_change(new_change:)
+    @change = new_change.compact.select(&:valid?)
+  end
+
   def balance
     inserted_coins.map(&:value).sum
   end

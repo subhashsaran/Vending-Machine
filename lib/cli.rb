@@ -8,11 +8,9 @@ Money.rounding_mode = BigDecimal::ROUND_HALF_UP
 
 class CLI
   def initialize
-    initial_config = ConfigLoader.new
-
     @vending_machine = VendingMachine.new(
-      products: initial_config.initial_products,
-      change: initial_config.initial_change
+      products: initial_products,
+      change: initial_change
     )
   end
 
@@ -21,6 +19,7 @@ class CLI
   PURCHASE_OPTION    = 'purchase'
   STOCK_OPTION       = 'stock'
   CHANGE_OPTION      = 'change'
+  RELOAD_OPTION      = 'reload'
   HELP_OPTION        = 'help'
   CLEAR_OPTION       = 'clear'
   EXIT_OPTION        = 'exit'
@@ -52,6 +51,8 @@ class CLI
         output_change
       when PURCHASE_OPTION
         purchase_product(input: option)
+      when RELOAD_OPTION
+        reload_vending_machine(input: option)
       when HELP_OPTION
         output_options
       when CLEAR_OPTION
@@ -69,6 +70,18 @@ class CLI
   private
 
   attr_reader :vending_machine
+
+  def config_loader
+    @config_loader ||= ConfigLoader.new
+  end
+
+  def initial_products
+    config_loader.initial_products
+  end
+
+  def initial_change
+    config_loader.initial_change
+  end
 
   # Interface output
 
@@ -115,6 +128,7 @@ class CLI
       STOCK_OPTION => 'Display current stock',
       CHANGE_OPTION => 'Display current change in machine',
       "#{PURCHASE_OPTION} <x>" => 'Attempt to purchase a product (case sensitive)',
+      "#{RELOAD_OPTION} <x>" => 'Reload vending machine back to initial values (options: products, change)',
       HELP_OPTION => 'Display these options',
       CLEAR_OPTION => 'Clear history',
       EXIT_OPTION => 'Close CLI'
@@ -221,5 +235,22 @@ class CLI
     else
       puts 'No change is dispensed'
     end
+  end
+
+  def reload_vending_machine(input:)
+    return reload_products if input == 'products'
+    return reload_change if input == 'change'
+
+    output_invalid_input
+  end
+
+  def reload_products
+    vending_machine.reset_products(new_products: initial_products)
+    puts 'Products reloaded back to initial contents'
+  end
+
+  def reload_change
+    vending_machine.reset_change(new_change: initial_change)
+    puts 'Change reloaded back to initial contents'
   end
 end

@@ -274,4 +274,113 @@ RSpec.describe VendingMachine do
       include_examples 'successful vend'
     end
   end
+
+  describe '.reset_products' do
+    subject { vending_machine.reset_products(new_products: new_products) }
+    let(:initial_products) { [Product.new(name: 'Apple', price: 30)] }
+
+    context 'with an empty array' do
+      let(:new_products) { [] }
+
+      it 'sets the products to an empty array' do
+        expect do
+          subject
+        end.to change(vending_machine, :products).to([])
+      end
+
+      it 'does not impact the change' do
+        expect { subject }.not_to change(vending_machine, :change)
+      end
+    end
+
+    context 'with new products' do
+      let(:new_products) do
+        [
+          Product.new(name: 'foo', price: 123),
+          Product.new(name: 'bar', price: 678),
+          Product.new(name: 'baz', price: 12)
+        ]
+      end
+
+      it 'sets the products to the new products' do
+        expect do
+          subject
+        end.to change(vending_machine, :products).to(new_products)
+      end
+
+      it 'does not impact the change' do
+        expect { subject }.not_to change(vending_machine, :change)
+      end
+    end
+  end
+
+  describe '.reset_change' do
+    subject { vending_machine.reset_change(new_change: new_change) }
+    let(:initial_change) { [Coin.new(value: 20)] }
+
+    context 'with an empty array' do
+      let(:new_change) { [] }
+
+      it 'sets the change to an empty array' do
+        expect do
+          subject
+        end.to change(vending_machine, :change).to([])
+      end
+
+      it 'does not impact the products' do
+        expect { subject }.not_to change(vending_machine, :products)
+      end
+    end
+
+    context 'with new change' do
+      let(:new_change) do
+        [
+          Coin.new(value: 20),
+          Coin.new(value: 20),
+          Coin.new(value: 50),
+          Coin.new(value: 100),
+          Coin.new(value: 5)
+        ]
+      end
+
+      it 'sets the change to the new change' do
+        expect do
+          subject
+        end.to change(vending_machine, :change).to(new_change)
+      end
+
+      it 'does not impact the products' do
+        expect { subject }.not_to change(vending_machine, :products)
+      end
+    end
+
+    context 'with invalid coins' do
+      let(:new_change) do
+        [
+          Coin.new(value: 20),
+          Coin.new(value: 20),
+          Coin.new(value: -50),
+          Coin.new(value: 100),
+          Coin.new(value: 5)
+        ]
+      end
+
+      it 'sets the change to the new change without the invalid coins' do
+        expect do
+          subject
+        end.to change(vending_machine, :change).to(
+          [
+            Coin.new(value: 20),
+            Coin.new(value: 20),
+            Coin.new(value: 100),
+            Coin.new(value: 5)
+          ]
+        )
+      end
+
+      it 'does not impact the products' do
+        expect { subject }.not_to change(vending_machine, :products)
+      end
+    end
+  end
 end

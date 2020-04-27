@@ -51,6 +51,7 @@ RSpec.describe CLI do
     "stock:        Display current stock\n" \
     "change:       Display current change in machine\n" \
     "purchase <x>: Attempt to purchase a product (case sensitive)\n" \
+    "reload <x>:   Reload vending machine back to initial values (options: products, change)\n" \
     "help:         Display these options\n" \
     "clear:        Clear history\n" \
     'exit:         Close CLI'
@@ -419,6 +420,112 @@ RSpec.describe CLI do
         "> Current Balance: £0.00\n" \
         "> #{new_stock}" \
         "> #{new_change}" \
+        '> '
+      end
+
+      include_examples 'correct output'
+    end
+  end
+
+  describe 'reload' do
+    context 'products' do
+      let(:user_input) do
+        [
+          'insert £1',
+          'purchase Banana',
+          'stock',
+          'change',
+          'reload products',
+          'stock',
+          'change',
+          'exit'
+        ]
+      end
+
+      let(:new_stock) do
+        "Current Stock\n" \
+        "=============\n" \
+        "Pepsi x 2 @ £0.50\n" \
+        "Coke x 3 @ £0.60\n" \
+        "Banana x 3 @ £0.30\n"
+      end
+
+      let(:new_change) do
+        "Current Change\n" \
+        "==============\n" \
+        "£2 x 5\n" \
+        "£1 x 6\n" \
+        "50p x 4\n" \
+        "20p x 4\n" \
+        "10p x 5\n" \
+        "5p x 5\n" \
+        "2p x 5\n" \
+        "1p x 5\n"
+      end
+
+      let(:expected_output) do
+        "#{introduction}Coin Inserted\n" \
+        "Current Balance: £1.00\n" \
+        "> Banana vended\n" \
+        "£0.70 is dispensed\n" \
+        "It consists of: 50p, 20p\n" \
+        "> #{new_stock}" \
+        "> #{new_change}" \
+        "> Products reloaded back to initial contents\n" \
+        "> #{initial_stock_output}" \
+        "> #{new_change}" \
+        '> '
+      end
+
+      include_examples 'correct output'
+    end
+
+    context 'change' do
+      let(:user_input) do
+        [
+          'insert £1',
+          'purchase Banana',
+          'stock',
+          'change',
+          'reload change',
+          'stock',
+          'change',
+          'exit'
+        ]
+      end
+
+      let(:new_stock) do
+        "Current Stock\n" \
+        "=============\n" \
+        "Pepsi x 2 @ £0.50\n" \
+        "Coke x 3 @ £0.60\n" \
+        "Banana x 3 @ £0.30\n"
+      end
+
+      let(:new_change) do
+        "Current Change\n" \
+        "==============\n" \
+        "£2 x 5\n" \
+        "£1 x 6\n" \
+        "50p x 4\n" \
+        "20p x 4\n" \
+        "10p x 5\n" \
+        "5p x 5\n" \
+        "2p x 5\n" \
+        "1p x 5\n"
+      end
+
+      let(:expected_output) do
+        "#{introduction}Coin Inserted\n" \
+        "Current Balance: £1.00\n" \
+        "> Banana vended\n" \
+        "£0.70 is dispensed\n" \
+        "It consists of: 50p, 20p\n" \
+        "> #{new_stock}" \
+        "> #{new_change}" \
+        "> Change reloaded back to initial contents\n" \
+        "> #{new_stock}" \
+        "> #{initial_change_output}" \
         '> '
       end
 
