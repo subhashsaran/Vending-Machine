@@ -40,6 +40,8 @@ Follows the format `purchase Pepsi`. This is case sensitive so entering `purchas
 ### reload <x>
 Follows the format `reload change` and `reload products`. This will reset the stock/change lists to their original values.
 
+ConfigLoader does not cache `initial.json`, if you want to adjust the change or products in the vending machine for a running instance of the CLI you can edit this file and then run the reload command. This will reparse the file and load it into the vending machine.
+
 ## How to Test
 
 There are two ways to use the system, either via the included CLI as described above or by loading up a rails console and loading the lib directory to manually interact with the VendingMachine, Coin, and Product interfaces.
@@ -47,6 +49,8 @@ There are two ways to use the system, either via the included CLI as described a
 In terms of exploring the code a nice way to explore is to begin with the more simple components, the Coin and Product classes. These are the basic building blocks of the system as they make up the main things that are passed back and forth with the VendingMachine.
 
 From there the VendingMachine's public interface allows you to explore the interactions within the system.
+
+There are further comments within each class and the commit history contains relevant information regarding implementation at each step along the way so using `git blame` to see the commit that added a given line will provide useful information in the commit descriptions.
 
 ## Requirements
 
