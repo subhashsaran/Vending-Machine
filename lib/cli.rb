@@ -8,14 +8,17 @@ Money.rounding_mode = BigDecimal::ROUND_HALF_UP
 
 class CLI
   def initialize
+    initial_config = ConfigLoader.new
+
     @vending_machine = VendingMachine.new(
-      products: initial_products,
-      change: initial_change
+      products: initial_config.initial_products,
+      change: initial_config.initial_change,
     )
   end
 
   BALANCE_OPTION     = 'balance'
   INSERT_COIN_OPTION = 'insert'
+  STOCK_OPTION       = 'stock'
   HELP_OPTION        = 'help'
   CLEAR_OPTION       = 'clear'
   EXIT_OPTION        = 'exit'
@@ -41,6 +44,8 @@ class CLI
         output_balance
       when INSERT_COIN_OPTION
         insert_coin(input: option)
+      when STOCK_OPTION
+        output_stock
       when HELP_OPTION
         output_options
       when CLEAR_OPTION
@@ -57,16 +62,7 @@ class CLI
 
   private
 
-  # Vending Machine set up
   attr_reader :vending_machine
-
-  def initial_products
-    []
-  end
-
-  def initial_change
-    []
-  end
 
   # Interface output
 
@@ -76,6 +72,8 @@ class CLI
 
   def output_interface
     output_welcome
+    puts "\n"
+    output_stock
     puts "\n"
     output_options
   end
@@ -106,6 +104,7 @@ class CLI
     {
       BALANCE_OPTION => 'Output Balance',
       "#{INSERT_COIN_OPTION} <x>" => "Insert Coin (options: #{insert_coin_custom_input_examples})",
+      STOCK_OPTION => 'Display current stock',
       HELP_OPTION => 'Display these options',
       CLEAR_OPTION => 'Clear history',
       EXIT_OPTION => 'Close CLI'
@@ -144,6 +143,22 @@ class CLI
 
   def output_balance
     puts "Current Balance: #{format_currency(vending_machine.balance)}"
+  end
+
+  def output_stock
+    products = vending_machine.products
+
+    product_info = products.group_by do |product|
+      { name: product.name, price: product.price }
+    end.transform_values(&:length)
+
+    puts "Current Stock"
+    puts "============="
+    product_info.each do |product_info, quantity|
+      name = product_info[:name]
+      price = format_currency(product_info[:price])
+      puts "#{name} x #{quantity} @ #{price}"
+    end
   end
 
   def format_currency(value)

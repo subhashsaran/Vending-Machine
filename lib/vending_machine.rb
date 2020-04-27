@@ -2,8 +2,8 @@
 
 class VendingMachine
   def initialize(products: [], change: [])
-    @products = products
-    @change = change
+    @products = products.compact
+    @change = change.compact
 
     @inserted_coins = []
   end

@@ -16,7 +16,7 @@ RSpec.describe VendingMachine do
       ]
     end
 
-    it { should be initial_products }
+    it { should eq initial_products }
   end
 
   describe '.insert_coin' do

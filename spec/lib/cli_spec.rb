@@ -16,8 +16,17 @@ RSpec.describe CLI do
 
   let(:introduction) {
     "Welcome to Vending Machine\n" \
-    "\n#{options_output}\n" \
+    "\n#{initial_stock_output}\n" \
+    "#{options_output}\n" \
     "> "
+  }
+
+  let(:initial_stock_output) {
+    "Current Stock\n" \
+    "=============\n" \
+    "Pepsi x 2 @ £0.50\n" \
+    "Coke x 3 @ £0.60\n" \
+    "Banana x 4 @ £0.30\n" \
   }
 
   let(:options_output) {
@@ -25,6 +34,7 @@ RSpec.describe CLI do
     "=================\n" \
     "balance:    Output Balance\n" \
     "insert <x>: Insert Coin (options: £2, £1, 50p, 20p, 10p, 5p, 2p, 1p)\n" \
+    "stock:      Display current stock\n" \
     "help:       Display these options\n" \
     "clear:      Clear history\n" \
     "exit:       Close CLI" \
@@ -110,6 +120,23 @@ RSpec.describe CLI do
 
     context 'with an option' do
       let(:user_input) { ['balance foo', 'exit'] }
+
+      include_examples 'correct output'
+    end
+  end
+
+  describe 'stock' do
+    let(:user_input) { ['stock', 'exit'] }
+
+    let(:expected_output) {
+      "#{introduction}#{initial_stock_output}" \
+      "> "
+    }
+
+    include_examples 'correct output'
+
+    context 'with an option' do
+      let(:user_input) { ['stock foo', 'exit'] }
 
       include_examples 'correct output'
     end

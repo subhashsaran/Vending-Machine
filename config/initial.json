@@ -1,0 +1,26 @@
+{
+  "stock": {
+    "Pepsi": {
+      "price": 50,
+      "quantity": 2
+    },
+    "Coke": {
+      "price": 60,
+      "quantity": 3
+    },
+    "Banana": {
+      "price": 30,
+      "quantity": 4
+    }
+  },
+  "change": {
+    "£2": 5,
+    "£1": 5,
+    "50p": 5,
+    "20p": 5,
+    "10p": 5,
+    "5p": 5,
+    "2p": 5,
+    "1p": 5
+  }
+}

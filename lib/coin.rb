@@ -23,11 +23,7 @@ class Coin
       value = Coin::COINS[string]
       return Coin.new(value: value) unless value.nil?
 
-      invalid_coin
-    end
-
-    def invalid_coin
-      Coin.new(value: -1)
+      nil
     end
   end
 
