@@ -2,7 +2,7 @@
 
 ## How to Use
 
-Running `ruby main.rb` will boot up the vending machine CLI in your terminal window where you will be presented with this interface:
+First off, you'll need to ensure you have ruby 2.6.3 installed as this is the version the project's Gemfile specifies. Once you have that installed the final prep required is `bundle`. After that you can boot up the CLI by running `ruby main.rb`. You will then be presented with this interface:
 
 ```
 Welcome to Vending Machine
