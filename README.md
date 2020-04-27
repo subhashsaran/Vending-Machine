@@ -7,21 +7,46 @@ Running `ruby main.rb` will boot up the vending machine CLI in your terminal win
 ```
 Welcome to Vending Machine
 
+Current Stock
+=============
+...stock...
+
+Current Change
+==============
+...change...
+
 Available Options
 =================
-balance: Output Balance
-insert:  Insert Coin
-help:    Display these options
-clear:   Clear history
-exit:    Close CLI
+balance:      Output Balance
+insert <x>:   Insert Coin (options: £2, £1, 50p, 20p, 10p, 5p, 2p, 1p)
+stock:        Display current stock
+change:       Display current change in machine
+purchase <x>: Attempt to purchase a product (case sensitive)
+reload <x>:   Reload vending machine back to initial values (options: products, change)
+help:         Display these options
+clear:        Clear history
+exit:         Close CLI
 >
 ```
 
 From here you can enter any of the given inputs to perform an action.
 
+### insert <x>
+Follows the format `insert £1`, `insert 50p`. Other inputs will be rejected.
+
+### purchase <x>
+Follows the format `purchase Pepsi`. This is case sensitive so entering `purchase pepsi` will return an out_of_stock error.
+
+### reload <x>
+Follows the format `reload change` and `reload products`. This will reset the stock/change lists to their original values.
+
 ## How to Test
 
-*Todo*
+There are two ways to use the system, either via the included CLI as described above or by loading up a rails console and loading the lib directory to manually interact with the VendingMachine, Coin, and Product interfaces.
+
+In terms of exploring the code a nice way to explore is to begin with the more simple components, the Coin and Product classes. These are the basic building blocks of the system as they make up the main things that are passed back and forth with the VendingMachine.
+
+From there the VendingMachine's public interface allows you to explore the interactions within the system.
 
 ## Requirements
 

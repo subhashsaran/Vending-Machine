@@ -1,5 +1,18 @@
 # frozen_string_literal: true
 
+# The VendingMachine represents the concept around which the system is built.
+# It contains a store of Products and two stores of Coins.
+#
+# The Product store represents the objects it can vend to the user.
+# The first Coin store, the change, is a collection of coins that can be returned to the user
+# when they insert too much money for the object they have purchased.
+# The second Coin store, the inserted_coins attribute, is the collection of coins the user has
+# inserted but have not yet been used to purchase something. This represents the user's current
+# balance. Once a purchase has been made this will be added to the change pile.
+#
+# The public interface for VendingMachine provides ways to interact with these three stores primarily
+# by adding to the current balance or purchasing an item.
+#
 class VendingMachine
   def initialize(products: [], change: [])
     @products = products.compact

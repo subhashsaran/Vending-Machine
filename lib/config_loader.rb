@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# This is used by the CLI for interacting with the vending machine config file.
+#
+# It provides an abstraction layer over the config file to return only Coin and Product objects
+# and handles issues with validation and parsing.
 class ConfigLoader
   CONFIG_PATH = File.join(__dir__, '..', 'config', 'initial.json')
 

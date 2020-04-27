@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# This is one of the two core building blocks of the system, Coins represent a unit of value that can
+# be inserted into a VendingMachine and returned back as change.
+#
+# Coins can be of any value however this will impact whether they are valid coins or not.
 class Coin
   COINS = {
     '£2' => 200,

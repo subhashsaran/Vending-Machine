@@ -6,6 +6,12 @@ I18n.enforce_available_locales = false
 Money.locale_backend = nil
 Money.rounding_mode = BigDecimal::ROUND_HALF_UP
 
+# This runs the interface for interacting with the VendingMachine system.
+# It builds a VendingMachine using the config in `config/initial.json` and then provides
+# a set of commands for interacting with it.
+# The main loop is located in `run` where the initial interface is displayed and then user input
+# is captured and distributed to the various actions within the CLI.
+#
 class CLI
   def initialize
     @vending_machine = VendingMachine.new(
