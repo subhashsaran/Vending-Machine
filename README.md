@@ -52,6 +52,18 @@ From there the VendingMachine's public interface allows you to explore the inter
 
 There are further comments within each class and the commit history contains relevant information regarding implementation at each step along the way so using `git blame` to see the commit that added a given line will provide useful information in the commit descriptions.
 
+## Time Taken
+
+I went with *Option 2* as described in the email, a more open ended set of time to implement the system. I started working on this at probably around 2:30pm-2:45pm, initially planning and writing up assumptions/requirements. I worked on it through till about 9pm (with breaks for food etc.), a fair while however I found it quite an interesting problem and I really enjoyed implementing a solution. Came back at just after 10pm to review, make some minor adjustments, and add docoumentation.
+
+### What I'd do with extra time
+
+- Break the various actions within the CLI out into their own classes. The CLI is an area of the code-base that would be nice to go back over and provide a neater solution for. Each of the actions could be broken into something along the lines of CLI::DisplayBalance which provides a command, description, and an action. That could move large amounts of the code within the CLI out into separate smaller classes.
+- Add specs for the ConfigLoader. It is largely tested indirectly via the CLI specs but it would be nice to have dedicated specs around that.
+- Update the reloading and initial loading system to optionally take user input, only falling back to the config file if the user chooses to user the defaults.
+- Play with the UI some more, the initial interface displaying the Stock, Change, and Options is very long. It would be neat to look into better ways to display the data.
+- Fix the case sensitive purchase command. It'd be more usable if you did not have to pay attention to the case of the product name when ordering.
+
 ## Requirements
 
 ### Provided Info
