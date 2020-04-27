@@ -67,6 +67,8 @@ class CLI
 
       output_cursor unless command == EXIT_OPTION
     end
+  rescue Interrupt
+    puts "\nExiting"
   end
 
   private
