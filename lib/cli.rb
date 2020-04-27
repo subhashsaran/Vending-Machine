@@ -12,13 +12,14 @@ class CLI
 
     @vending_machine = VendingMachine.new(
       products: initial_config.initial_products,
-      change: initial_config.initial_change,
+      change: initial_config.initial_change
     )
   end
 
   BALANCE_OPTION     = 'balance'
   INSERT_COIN_OPTION = 'insert'
   STOCK_OPTION       = 'stock'
+  CHANGE_OPTION      = 'change'
   HELP_OPTION        = 'help'
   CLEAR_OPTION       = 'clear'
   EXIT_OPTION        = 'exit'
@@ -46,6 +47,8 @@ class CLI
         insert_coin(input: option)
       when STOCK_OPTION
         output_stock
+      when CHANGE_OPTION
+        output_change
       when HELP_OPTION
         output_options
       when CLEAR_OPTION
@@ -74,6 +77,8 @@ class CLI
     output_welcome
     puts "\n"
     output_stock
+    puts "\n"
+    output_change
     puts "\n"
     output_options
   end
@@ -105,6 +110,7 @@ class CLI
       BALANCE_OPTION => 'Output Balance',
       "#{INSERT_COIN_OPTION} <x>" => "Insert Coin (options: #{insert_coin_custom_input_examples})",
       STOCK_OPTION => 'Display current stock',
+      CHANGE_OPTION => 'Display current change in machine',
       HELP_OPTION => 'Display these options',
       CLEAR_OPTION => 'Clear history',
       EXIT_OPTION => 'Close CLI'
@@ -152,12 +158,23 @@ class CLI
       { name: product.name, price: product.price }
     end.transform_values(&:length)
 
-    puts "Current Stock"
-    puts "============="
+    puts 'Current Stock'
+    puts '============='
     product_info.each do |product_info, quantity|
       name = product_info[:name]
       price = format_currency(product_info[:price])
       puts "#{name} x #{quantity} @ #{price}"
+    end
+  end
+
+  def output_change
+    change = vending_machine.change
+    coin_counts = change.group_by(&:name).transform_values(&:count)
+
+    puts 'Current Change'
+    puts '=============='
+    coin_counts.each do |coin_name, quantity|
+      puts "#{coin_name} x #{quantity}"
     end
   end
 

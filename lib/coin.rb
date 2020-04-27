@@ -2,15 +2,15 @@
 
 class Coin
   COINS = {
-    '£2'  => 200,
-    '£1'  => 100,
+    '£2' => 200,
+    '£1' => 100,
     '50p' => 50,
     '20p' => 20,
     '10p' => 10,
-    '5p'  => 5,
-    '2p'  => 2,
-    '1p'  => 1
-  }
+    '5p' => 5,
+    '2p' => 2,
+    '1p' => 1
+  }.freeze
   VALID_COIN_NAMES = COINS.keys.freeze
   VALID_COIN_VALUES = COINS.values.freeze
 
@@ -35,5 +35,13 @@ class Coin
 
   def valid?
     Coin.valid_coins.include?(value)
+  end
+
+  def name
+    COINS.invert[value]
+  end
+
+  def ==(other)
+    value == other.value
   end
 end

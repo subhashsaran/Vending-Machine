@@ -6,6 +6,19 @@ RSpec.describe VendingMachine do
   let(:initial_products) { [] }
   let(:initial_change) { [] }
 
+  context 'with an invalid coin in the initial load' do
+    let(:initial_change) do
+      [
+        Coin.new(value: -1),
+        Coin.new(value: 200)
+      ]
+    end
+
+    it 'filters out the coin' do
+      expect(vending_machine.change).to eq([Coin.new(value: 200)])
+    end
+  end
+
   describe '.products' do
     subject { vending_machine.products }
 
@@ -17,6 +30,19 @@ RSpec.describe VendingMachine do
     end
 
     it { should eq initial_products }
+  end
+
+  describe '.change' do
+    subject { vending_machine.change }
+
+    let(:initial_change) do
+      [
+        Coin.new(value: 20),
+        Coin.new(value: 200)
+      ]
+    end
+
+    it { should eq initial_change }
   end
 
   describe '.insert_coin' do

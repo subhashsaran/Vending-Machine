@@ -3,12 +3,12 @@
 class VendingMachine
   def initialize(products: [], change: [])
     @products = products.compact
-    @change = change.compact
+    @change = change.compact.select(&:valid?)
 
     @inserted_coins = []
   end
 
-  attr_reader :products
+  attr_reader :products, :change
 
   def balance
     inserted_coins.map(&:value).sum
