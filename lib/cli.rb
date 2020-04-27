@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 Dir[File.join(__dir__, '**', '*.rb')].sort.each { |file| require file }
-require 'money'
-I18n.enforce_available_locales = false
-Money.locale_backend = nil
-Money.rounding_mode = BigDecimal::ROUND_HALF_UP
 
 # This runs the interface for interacting with the VendingMachine system.
 # It builds a VendingMachine using the config in `config/initial.json` and then provides
@@ -214,7 +210,7 @@ class CLI
   end
 
   def format_currency(value)
-    Money.new(value, 'GBP').format
+    CurrencyRenderer.render_currency(value: value)
   end
 
   def insert_coin(input:)

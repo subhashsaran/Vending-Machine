@@ -44,6 +44,6 @@ class VendingResponse
   private
 
   def format_currency(value)
-    Money.new(value, 'GBP').format
+    CurrencyRenderer.render_currency(value: value)
   end
 end
