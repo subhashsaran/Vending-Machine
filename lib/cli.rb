@@ -35,7 +35,7 @@ class CLI
     command = ''
 
     while command != EXIT_OPTION
-      user_input = gets.chomp
+      user_input = gets&.chomp || ''
 
       args = user_input.split(' ')
       command = args[0]
