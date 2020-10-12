@@ -62,7 +62,6 @@ I went with *Option 2* as described in the email, a more open ended set of time 
 - Add specs for the ConfigLoader. It is largely tested indirectly via the CLI specs but it would be nice to have dedicated specs around that.
 - Update the reloading and initial loading system to optionally take user input, only falling back to the config file if the user chooses to user the defaults.
 - Play with the UI some more, the initial interface displaying the Stock, Change, and Options is very long. It would be neat to look into better ways to display the data.
-- Fix the case sensitive purchase command. It'd be more usable if you did not have to pay attention to the case of the product name when ordering.
 
 ## Requirements
 

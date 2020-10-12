@@ -66,11 +66,11 @@ class VendingMachine
   attr_reader :inserted_coins
 
   def find_cheapest_product(name:)
-    products.select { |product| product.name == name }.min_by(&:price)
+    products.select { |product| product.matches_name?(name) }.min_by(&:price)
   end
 
   def product_in_stock?(name:)
-    products.find { |product| product.name == name }
+    products.find { |product| product.matches_name?(name) }
   end
 
   def product_price(name:)

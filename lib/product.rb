@@ -15,4 +15,8 @@ class Product
     name == other.name &&
       price = other.price
   end
+
+  def matches_name?(name)
+    self.name.casecmp?(name)
+  end
 end

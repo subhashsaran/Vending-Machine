@@ -425,6 +425,54 @@ RSpec.describe CLI do
 
       include_examples 'correct output'
     end
+
+    context 'with the product name in the wrong case' do
+      let(:user_input) do
+        [
+          'insert £1',
+          'purchase bANANA',
+          'balance',
+          'stock',
+          'change',
+          'exit'
+        ]
+      end
+
+      let(:new_stock) do
+        "Current Stock\n" \
+        "=============\n" \
+        "Pepsi x 2 @ £0.50\n" \
+        "Coke x 3 @ £0.60\n" \
+        "Banana x 3 @ £0.30\n"
+      end
+
+      let(:new_change) do
+        "Current Change\n" \
+        "==============\n" \
+        "£2 x 5\n" \
+        "£1 x 6\n" \
+        "50p x 4\n" \
+        "20p x 4\n" \
+        "10p x 5\n" \
+        "5p x 5\n" \
+        "2p x 5\n" \
+        "1p x 5\n"
+      end
+
+      let(:expected_output) do
+        "#{introduction}Coin Inserted\n" \
+        "Current Balance: £1.00\n" \
+        "> Banana vended\n" \
+        "£0.70 is dispensed\n" \
+        "It consists of: 50p, 20p\n" \
+        "> Current Balance: £0.00\n" \
+        "> #{new_stock}" \
+        "> #{new_change}" \
+        '> '
+      end
+
+      include_examples 'correct output'
+    end
   end
 
   describe 'reload' do
